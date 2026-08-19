@@ -1,0 +1,101 @@
+# geotech-reliability
+
+A small, generic reliability-analysis engine (Monte Carlo and, in
+progress, FORM) for geotechnical engineering, paired with a library of
+validated limit-state functions: slope stability (Bishop's Simplified)
+and lined-cavern stability (wall crushing, hydraulic jacking).
+
+The reliability engine has no knowledge of soil or rock mechanics — it
+only knows how to sample random variables and evaluate `g(x) = capacity
+- demand`. Any physical problem that can be expressed as a `LimitState`
+(one method, `evaluate`, plus a dict of `RandomVariable`s) can be
+plugged in without modifying the engine.
+
+## Why this exists
+
+Reliability-based design in geotechnical engineering is usually done
+either in commercial FEM/FDM-coupled tools (expensive, closed-source)
+or ad hoc in spreadsheets, with no reusable separation between the
+reliability *method* and the *limit state* being analyzed. This package
+provides that separation as a small, tested, open library, so a new
+limit state (a new failure mode, a new problem type) can be added in a
+few dozen lines without touching the sampling or reliability-index
+logic.
+
+## Install
+
+```bash
+pip install -e ".[dev]"
+```
+
+## Quick example
+
+```python
+import numpy as np
+from geotech_reliability.core.distributions import RandomVariable
+from geotech_reliability.core.monte_carlo import run_monte_carlo
+from geotech_reliability.limit_states.slope_bishop import SliceGeometry, SlopeBishopLimitState
+
+n = 40
+slices = SliceGeometry(
+    width=np.full(n, 1.0),
+    height=np.linspace(2, 8, n),
+    alpha=np.linspace(np.radians(-10), np.radians(35), n),
+    u=np.zeros(n),
+)
+
+gamma = RandomVariable("gamma", mean=19.0, cov=0.05, dist="normal")
+c = RandomVariable("c", mean=5.0, cov=0.3, dist="lognormal")
+phi = RandomVariable("phi_deg", mean=25.0, cov=0.1, dist="normal")
+
+limit_state = SlopeBishopLimitState(slices, gamma, c, phi, kh=0.1, ru=0.25)
+result = run_monte_carlo(limit_state, n=200_000, seed=1)
+
+print(f"P(f) = {result.pf:.4f}, beta = {result.beta}")
+```
+
+Runnable end-to-end examples:
+- `docs/examples/slope_reliability.py`
+- `docs/examples/cavern_system_reliability.py` (two limit states sharing
+  common random variables, with system/union probability of failure)
+
+## What's implemented
+
+- **Core engine**: `RandomVariable` (normal, lognormal, uniform,
+  deterministic), crude Monte Carlo sampling, system (union)
+  reliability across multiple limit states with explicit, validated
+  variable sharing.
+- **Slope stability**: Bishop's Simplified method of slices, with
+  pseudo-static seismic loading and pore pressure. Validated against
+  the closed-form infinite-slope solution (see `tests/test_slope_bishop.py`).
+- **Cavern stability**: wall-crushing (Kirsch closed-form hoop stress +
+  simplified Hoek-Brown rock mass strength) and hydraulic-jacking
+  (minimum-principal-stress cover criterion) limit states for a lined
+  rock cavern under internal gas pressure.
+
+## What's not yet implemented
+
+- FORM (First-Order Reliability Method) — `RandomVariable` already
+  exposes the standard-normal transforms FORM needs
+  (`to_standard_normal` / `from_standard_normal`), but the HL-RF
+  iteration itself is not yet written.
+- Automated critical-slip-surface search for the slope limit state
+  (currently the surface geometry is supplied by the caller; the
+  reliability analysis is run on a fixed, given surface).
+- Sobol/variance-based sensitivity analysis (`core/sensitivity.py` is a
+  placeholder).
+
+## Validation status
+
+This is early-stage software (v0.1.0). The individual physics
+(Bishop's Simplified FoS, Kirsch hoop stress, simplified Hoek-Brown
+strength) are checked against closed-form and published formulations —
+see the `tests/` directory and the docstrings in each limit-state
+module for the specific references. **The reliability results (P(f),
+beta) have not been benchmarked against independent numerical models
+(FEM/FDM/DEM) or site data**, and should not be used for design
+decisions without that validation.
+
+## License
+
+MIT — see `LICENSE`.

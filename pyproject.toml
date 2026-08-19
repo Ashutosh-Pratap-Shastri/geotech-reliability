@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "geotech-reliability"
+version = "0.1.0"
+description = "A generic Monte Carlo / FORM reliability engine for geotechnical limit-state problems, with a validated library of slope-stability and cavern-stability limit states."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Ashutosh Pratap Shastri" }
+]
+keywords = [
+    "geotechnical engineering",
+    "reliability analysis",
+    "Monte Carlo",
+    "FORM",
+    "slope stability",
+    "rock mechanics",
+    "underground storage",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+]
+plots = [
+    "matplotlib>=3.6",
+]
+
+[project.urls]
+Homepage = "https://github.com/ashutosh-pratap-shastri/geotech-reliability"
+Issues = "https://github.com/ashutosh-pratap-shastri/geotech-reliability/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
