@@ -9,6 +9,7 @@ import numpy as np
 
 from geotech_reliability.core.distributions import RandomVariable
 from geotech_reliability.core.monte_carlo import run_monte_carlo
+from geotech_reliability.core.form import run_form
 from geotech_reliability.limit_states.slope_bishop import SliceGeometry, SlopeBishopLimitState
 
 
@@ -34,10 +35,22 @@ def main():
     result = run_monte_carlo(limit_state, n=200_000, seed=1)
 
     beta_str = f"{result.beta:.3f}" if result.beta is not None else "undefined (pf=0 or 1)"
-    print(f"P(f) = {result.pf:.5f}   beta = {beta_str}")
+    print("Monte Carlo:")
+    print(f"  P(f) = {result.pf:.5f}   beta = {beta_str}")
     lo, hi = result.pf_confidence_interval(0.95)
-    print(f"95% CI on P(f): [{lo:.5f}, {hi:.5f}]")
-    print(f"Mean FoS (over all samples, from g = FoS - 1): {result.mean_g + 1:.3f}")
+    print(f"  95% CI on P(f): [{lo:.5f}, {hi:.5f}]")
+    print(f"  Mean FoS (over all samples, from g = FoS - 1): {result.mean_g + 1:.3f}")
+
+    form_result = run_form(limit_state)
+    print("\nFORM (Hasofer-Lind / HL-RF):")
+    print(f"  P(f) = {form_result.pf:.5f}   beta = {form_result.beta:.3f}")
+    print(f"  converged = {form_result.converged}   iterations = {form_result.n_iter}")
+    print(f"  design point (most likely failure combination): {form_result.design_point_x}")
+    print(
+        "\nNote: FORM linearizes the (nonlinear) Bishop limit state at the "
+        "design point, so it will not match Monte Carlo exactly -- some "
+        "difference is expected and normal, not an error."
+    )
 
 
 if __name__ == "__main__":

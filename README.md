@@ -62,9 +62,9 @@ Runnable end-to-end examples:
 ## What's implemented
 
 - **Core engine**: `RandomVariable` (normal, lognormal, uniform,
-  deterministic), crude Monte Carlo sampling, system (union)
-  reliability across multiple limit states with explicit, validated
-  variable sharing.
+  deterministic), crude Monte Carlo sampling, **FORM (Hasofer-Lind /
+  HL-RF algorithm)**, and system (union) reliability across multiple
+  limit states with explicit, validated variable sharing.
 - **Slope stability**: Bishop's Simplified method of slices, with
   pseudo-static seismic loading and pore pressure. Validated against
   the closed-form infinite-slope solution (see `tests/test_slope_bishop.py`).
@@ -75,10 +75,6 @@ Runnable end-to-end examples:
 
 ## What's not yet implemented
 
-- FORM (First-Order Reliability Method) — `RandomVariable` already
-  exposes the standard-normal transforms FORM needs
-  (`to_standard_normal` / `from_standard_normal`), but the HL-RF
-  iteration itself is not yet written.
 - Automated critical-slip-surface search for the slope limit state
   (currently the surface geometry is supplied by the caller; the
   reliability analysis is run on a fixed, given surface).
@@ -91,10 +87,15 @@ This is early-stage software (v0.1.0). The individual physics
 (Bishop's Simplified FoS, Kirsch hoop stress, simplified Hoek-Brown
 strength) are checked against closed-form and published formulations —
 see the `tests/` directory and the docstrings in each limit-state
-module for the specific references. **The reliability results (P(f),
-beta) have not been benchmarked against independent numerical models
-(FEM/FDM/DEM) or site data**, and should not be used for design
-decisions without that validation.
+module for the specific references. FORM is validated against the
+exact closed-form reliability index for linear limit states (where FORM
+is mathematically exact, not approximate), and cross-checked against
+Monte Carlo on the nonlinear slope and cavern limit states, where the
+two methods agree in sign and are reasonably close — the remaining gap
+is expected, since FORM linearizes a nonlinear surface. **The
+reliability results (P(f), beta) have not been benchmarked against
+independent numerical models (FEM/FDM/DEM) or site data**, and should
+not be used for design decisions without that validation.
 
 ## License
 

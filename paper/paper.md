@@ -24,9 +24,9 @@ bibliography: paper.bib
 together in geotechnical software: the *reliability method* (how you
 sample uncertain inputs and estimate a probability of failure) and the
 *limit-state function* (the specific physics of a specific failure
-mode). The package provides a small, generic Monte Carlo reliability
-engine that operates on any object implementing a two-method
-`LimitState` interface, plus a library of limit-state functions
+mode). The package provides a small, generic Monte Carlo and First-Order
+Reliability Method (FORM) engine that operates on any object
+implementing a two-method `LimitState` interface, plus a library of limit-state functions
 implementing two geotechnical problems: slope stability by Bishop's
 Simplified method of slices [@bishop1955], and the stability of a lined
 rock cavern under internal gas pressure, evaluated against wall-crushing
@@ -53,8 +53,8 @@ physics. `geotech-reliability` addresses this gap with a small, tested,
 openly licensed Python package in which the reliability engine and the
 limit-state physics are decoupled, so that researchers can validate a
 new limit-state function independently and immediately reuse the
-existing, tested Monte Carlo (and, in an upcoming release, FORM)
-machinery, including system (union) reliability across multiple
+existing, tested Monte Carlo and FORM machinery, including system
+(union) reliability across multiple
 correlated failure modes — a common need in cavern and slope design
 where more than one failure mechanism competes (e.g. wall crushing vs.
 hydraulic jacking under the same internal pressure).
@@ -76,8 +76,14 @@ geometry that approximates an infinite slope (see
 `tests/test_slope_bishop.py`), matching to within 1e-6 relative error.
 The Monte Carlo engine is validated against the exact closed-form
 probability of failure for a linear limit state with normally
-distributed capacity and demand (see `tests/test_monte_carlo.py`).
-TODO before submission: add validation of the cavern limit states
+distributed capacity and demand (see `tests/test_monte_carlo.py`). FORM
+is validated against the same closed-form linear case, for which FORM
+is mathematically exact rather than approximate, and is cross-checked
+against Monte Carlo on the nonlinear slope and cavern limit states,
+where the two methods agree in sign and lie within a generous tolerance
+of one another (see `tests/test_form.py`); the residual disagreement is
+expected, since FORM linearizes an inherently nonlinear limit-state
+surface. TODO before submission: add validation of the cavern limit states
 against an independent numerical model or published case study, per the
 package's own stated limitation (see README "Validation status").
 
