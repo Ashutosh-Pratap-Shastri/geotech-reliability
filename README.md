@@ -1,9 +1,13 @@
 # geotech-reliability
 
-A small, generic reliability-analysis engine (Monte Carlo and, in
-progress, FORM) for geotechnical engineering, paired with a library of
-validated limit-state functions: slope stability (Bishop's Simplified)
-and lined-cavern stability (wall crushing, hydraulic jacking).
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22023466.svg)](https://doi.org/10.5281/zenodo.22023466)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![tests](https://github.com/Ashutosh-Pratap-Shastri/geotech-reliability/actions/workflows/tests.yml/badge.svg)](https://github.com/Ashutosh-Pratap-Shastri/geotech-reliability/actions/workflows/tests.yml)
+
+A small, generic reliability-analysis engine (Monte Carlo and FORM) for
+geotechnical engineering, paired with a library of validated
+limit-state functions: slope stability (Bishop's Simplified) and
+lined-cavern stability (wall crushing, hydraulic jacking).
 
 The reliability engine has no knowledge of soil or rock mechanics — it
 only knows how to sample random variables and evaluate `g(x) = capacity
@@ -96,6 +100,13 @@ is expected, since FORM linearizes a nonlinear surface. **The
 reliability results (P(f), beta) have not been benchmarked against
 independent numerical models (FEM/FDM/DEM) or site data**, and should
 not be used for design decisions without that validation.
+
+## How to cite
+
+If you use this software, please cite the archived release:
+
+> Ashutosh Pratap Shastri. (2026). geotech-reliability v0.1.0.
+> Zenodo. https://doi.org/10.5281/zenodo.22023466
 
 ## License
 
