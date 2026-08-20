@@ -1,22 +1,26 @@
----
-title: 'geotech-reliability: A generic Monte Carlo reliability engine with a validated library of geotechnical limit states'
+\---
+
+title: 'geotech-reliability: A generic Monte Carlo/FORM reliability engine with a validated library of geotechnical limit states'
 tags:
-  - Python
-  - geotechnical engineering
-  - reliability analysis
-  - Monte Carlo
-  - slope stability
-  - rock mechanics
+
+* Python
+* geotechnical engineering
+* reliability analysis
+* Monte Carlo
+* FORM
+* slope stability
+* rock mechanics
 authors:
-  - name: Ashutosh Pratap Shastri
-    orcid: TODO
-    affiliation: 1
+* name: Ashutosh Pratap Shastri
+orcid: 0009-0007-9117-1591
+affiliation: 1
 affiliations:
-  - name: TODO (department, institution)
-    index: 1
-date: TODO
+* name: Department of Mining Engineering, Indian Institute of Technology (BHU), Varanasi, Uttar Pradesh, India
+index: 1
+date: 19 August 2026
 bibliography: paper.bib
----
+
+\---
 
 # Summary
 
@@ -28,10 +32,10 @@ mode). The package provides a small, generic Monte Carlo and First-Order
 Reliability Method (FORM) engine that operates on any object
 implementing a two-method `LimitState` interface, plus a library of limit-state functions
 implementing two geotechnical problems: slope stability by Bishop's
-Simplified method of slices [@bishop1955], and the stability of a lined
+Simplified method of slices \[@bishop1955], and the stability of a lined
 rock cavern under internal gas pressure, evaluated against wall-crushing
-(via the closed-form Kirsch stress solution [@kirsch1898] and a
-simplified Hoek-Brown rock mass strength estimate [@hoek2002]) and
+(via the closed-form Kirsch stress solution \[@kirsch1898] and a
+simplified Hoek-Brown rock mass strength estimate \[@hoek2002]) and
 hydraulic-jacking (minimum-principal-stress cover) limit states. New
 limit states — new failure modes, new problem domains — can be added by
 implementing `evaluate()` and a dictionary of input `RandomVariable`s,
@@ -61,27 +65,42 @@ hydraulic jacking under the same internal pressure).
 
 # Comparison to existing software
 
-TODO before submission: expand with explicit comparison to PySlope
-[@pyslope] (deterministic slope stability only, no reliability layer),
-GeoStudio/Slide2/GEO5 (commercial, closed-source, include reliability
-modules but not extensible), and any open FORM/Monte Carlo reliability
-packages from other engineering domains (e.g. structural reliability
-toolkits) that are not geotechnics-specific.
+Several open-source Python packages already implement deterministic
+slope-stability limit-equilibrium analysis, including `PySlope`
+\[@pyslope], which implements Bishop's Simplified and Janbu's Simplified
+methods with an object-oriented interface, and `pyCSS` \[@pycss], which
+implements Fellenius and Bishop's methods for circular slip surfaces.
+Both are useful, focused tools, but neither provides a reliability
+layer: they return a deterministic factor of safety rather than a
+probability of failure, and neither separates the reliability *method*
+from the slope-specific *physics* in a way that would let a user reuse
+the same sampling/reliability-index machinery for an unrelated
+geotechnical problem (e.g. cavern stability). Commercial packages such
+as Slide2, GeoStudio, and RS2 do provide probabilistic/reliability
+modules alongside deterministic analysis, but are closed-source,
+licensed, and not extensible or inspectable by researchers.
+`geotech-reliability` differs from both groups by treating the
+reliability engine (Monte Carlo, FORM) as the reusable core and the
+physics (slope stability, cavern stability, or any future limit state)
+as a thin, pluggable layer implementing a two-method interface — so
+adding reliability analysis to a new geotechnical problem does not
+require re-implementing sampling, FORM's HL-RF search, or system
+(union) reliability across correlated failure modes.
 
 # Validation
 
 The Bishop's Simplified implementation is validated against the
 closed-form infinite-slope factor-of-safety solution under a slip
 geometry that approximates an infinite slope (see
-`tests/test_slope_bishop.py`), matching to within 1e-6 relative error.
+`tests/test\_slope\_bishop.py`), matching to within 1e-6 relative error.
 The Monte Carlo engine is validated against the exact closed-form
 probability of failure for a linear limit state with normally
-distributed capacity and demand (see `tests/test_monte_carlo.py`). FORM
+distributed capacity and demand (see `tests/test\_monte\_carlo.py`). FORM
 is validated against the same closed-form linear case, for which FORM
 is mathematically exact rather than approximate, and is cross-checked
 against Monte Carlo on the nonlinear slope and cavern limit states,
 where the two methods agree in sign and lie within a generous tolerance
-of one another (see `tests/test_form.py`); the residual disagreement is
+of one another (see `tests/test\_form.py`); the residual disagreement is
 expected, since FORM linearizes an inherently nonlinear limit-state
 surface. TODO before submission: add validation of the cavern limit states
 against an independent numerical model or published case study, per the
@@ -89,6 +108,9 @@ package's own stated limitation (see README "Validation status").
 
 # Acknowledgements
 
-TODO.
+The author thanks the Department of Mining Engineering, Indian
+Institute of Technology (BHU) Varanasi, for institutional support
+during the development of this software.
 
 # References
+
