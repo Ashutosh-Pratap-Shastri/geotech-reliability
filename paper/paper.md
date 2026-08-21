@@ -28,6 +28,8 @@ authors:
 
 &#x20; - name: Satyabrata Behera
 
+&#x20;   orcid: null
+
 &#x20;   affiliation: 1
 
 affiliations:
