@@ -24,13 +24,13 @@ authors:
 
 &#x20;   orcid: 0009-0007-9117-1591
 
-&#x20;   affiliation: 1
+&#x20;   affiliation: "1"
 
 &#x20; - name: Satyabrata Behera
 
 &#x20;   orcid: null
 
-&#x20;   affiliation: 1
+&#x20;   affiliation: "1"
 
 affiliations:
 
@@ -186,13 +186,13 @@ closed-form infinite-slope factor-of-safety solution under a slip
 
 geometry that approximates an infinite slope (see
 
-`tests/test\_slope\_bishop.py`), matching to within 1e-6 relative error.
+`tests/test\\\_slope\\\_bishop.py`), matching to within 1e-6 relative error.
 
 The Monte Carlo engine is validated against the exact closed-form
 
 probability of failure for a linear limit state with normally
 
-distributed capacity and demand (see `tests/test\_monte\_carlo.py`). FORM
+distributed capacity and demand (see `tests/test\\\_monte\\\_carlo.py`). FORM
 
 is validated against the same closed-form linear case, for which FORM
 
@@ -202,7 +202,7 @@ against Monte Carlo on the nonlinear slope and cavern limit states,
 
 where the two methods agree in sign and lie within a generous tolerance
 
-of one another (see `tests/test\_form.py`); the residual disagreement is
+of one another (see `tests/test\\\_form.py`); the residual disagreement is
 
 expected, since FORM linearizes an inherently nonlinear limit-state
 
